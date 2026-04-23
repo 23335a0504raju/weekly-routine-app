@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Weekly Routine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-gradient-start: #fdfbfb;
+            --bg-gradient-end: #ebedee;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --break-bg: #fef08a;
+            --break-text: #a16207;
+            --cell-hover: #f3f4f6;
+            --cell-focus: #eff6ff;
+            --focus-ring: #6366f1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h1 {
+            color: var(--text-main);
+            margin: 0;
+            font-size: 2.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toolbar-container {
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: flex-start;
+        }
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+        }
+
+        .btn-icon-only {
+            padding: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-outline {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--cell-hover);
+            border-color: #d1d5db;
+        }
+
+        .btn-secondary {
+            background-color: #f3f4f6;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e5e7eb;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .divider {
+            width: 1px;
+            height: 24px;
+            background: var(--border-color);
+            margin: 0 4px;
+        }
+
+        .table-container {
+            width: 100%;
+            max-width: 1400px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            &::-webkit-scrollbar { height: 8px; }
+            &::-webkit-scrollbar-track { background: #f1f1f1; }
+            &::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+            &::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            table-layout: fixed;
+        }
+
+        th, td {
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding: 12px 8px;
+            vertical-align: top;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        th:last-child, td:last-child { border-right: none; }
+        tr:last-child td { border-bottom: none; }
+
+        th {
+            background-color: #f9fafb;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.02em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            user-select: none;
+        }
+
+        th.day-header {
+            position: relative;
+            padding-right: 36px;
+        }
+
+        .col-copy-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 8px;
+            background: #e0e7ff;
+            color: var(--primary);
+            border: none;
+            border-radius: 4px;
+            padding: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .col-copy-btn:hover {
+            background: #c7d2fe;
+        }
+
+        .col-copy-btn i { width: 14px; height: 14px; }
+        
+        th:first-child {
+            width: 220px;
+        }
+        
+        th.today, td.today { background-color: #f0fdf4; }
+        th.today { color: #166534; border-bottom: 2px solid #22c55e; }
+
+        td.time-col {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            user-select: none;
+        }
+
+        .task-cell, .time-text {
+            transition: all 0.2s ease;
+            cursor: text;
+            outline: none;
+            position: relative;
+            border-radius: 4px;
+            user-select: text;
+        }
+
+        .task-cell:empty:before {
+            content: 'Click to add...';
+            color: #9ca3af;
+            font-style: italic;
+            pointer-events: none;
+            display: block;
+            opacity: 0.7;
+        }
+
+        .time-text:empty:before {
+            content: 'Set time...';
+            color: #9ca3af;
+            font-style: italic;
+            pointer-events: none;
+        }
+
+        .task-cell:hover, .time-text:hover { background-color: var(--cell-hover); }
+        .task-cell:focus, .time-text:focus {
+            background-color: var(--cell-focus);
+            box-shadow: inset 0 0 0 2px var(--focus-ring);
+            z-index: 1;
+        }
+
+        .time-text {
+            padding: 4px;
+            margin: -4px;
+            min-height: 20px;
+            white-space: pre-wrap;
+            line-height: 1.3;
+        }
+
+        .break-row td {
+            background-color: var(--break-bg);
+            font-weight: 700;
+            color: var(--break-text);
+            text-align: center;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            user-select: none;
+        }
+
+        .row-actions {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            display: flex;
+            gap: 4px;
+            transition: opacity 0.2s;
+            background: var(--card-bg);
+            padding: 4px;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+        }
+        
+        tr:hover .row-actions { opacity: 1; }
+
+        .action-btn {
+            background: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            border-radius: 4px;
+            padding: 4px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .action-btn.delete-btn {
+            color: #ef4444;
+        }
+
+        .action-btn.delete-btn:hover {
+            background: #fee2e2;
+        }
+
+        .action-btn i { width: 14px; height: 14px; }
+
+        /* Custom Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 90%;
+            max-width: 400px;
+            transform: scale(0.95) translateY(10px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .modal-overlay.active .modal-box {
+            transform: scale(1) translateY(0);
+        }
+        .modal-icon {
+            color: #f59e0b;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+        .modal-message {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .modal-btn.cancel {
+            background-color: white;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+        .modal-btn.cancel:hover { background-color: #f3f4f6; }
+        .modal-btn.confirm {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--primary);
+        }
+        .modal-btn.confirm:hover { background-color: var(--primary-hover); }
+
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: #1f2937;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 900px) {
+            .header-container { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .controls { flex-wrap: wrap; }
+        }
+        
+        @media print {
+            @page { size: landscape; margin: 0; }
+            body { background: white; padding: 10mm; min-height: 0 !important; }
+            .container { padding: 0 !important; margin: 0 !important; box-shadow: none !important; border: none !important; }
+            .controls, .toolbar-container, .toast-container, .row-actions, .col-copy-btn, .modal-overlay { display: none !important; }
+            .header-container { margin-bottom: 10px; }
+            .table-container { 
+                border-radius: 0; box-shadow: none; border: none; 
+                max-width: 100%; width: 100%; margin-bottom: 0; 
+                overflow: visible !important;
+            }
+            .task-cell:empty:before, .time-text:empty:before { content: ''; }
+            
+            table { 
+                table-layout: fixed; width: 100%; 
+                border: 1.5px solid #000 !important;
+                border-collapse: collapse !important;
+            }
+            th:first-child { width: 150px !important; }
+            th.day-header { padding: 8px 4px !important; }
+            
+            th, td { 
+                border: 1px solid #000 !important; 
+                padding: 6px 4px !important; 
+                color: #000 !important; 
+                font-size: 9pt !important; 
+                line-height: 1.3 !important;
+                position: static !important;
+            }
+            th { 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                background-color: #f3f4f6 !important; 
+                font-size: 8pt !important;
+            }
+            td.time-col {
+                background-color: #f9fafb !important;
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
+            .break-row td:not(.time-col) { 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                background-color: #fef08a !important; 
+                padding: 6px !important;
+            }
+            
+            .time-text { min-height: 0; padding: 0; margin: 0; white-space: nowrap !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="title-wrapper">
+            <i data-feather="calendar" style="width: 32px; height: 32px; color: var(--primary);"></i>
+            <h1>Weekly Routine</h1>
+        </div>
+        <div class="controls">
+            <button class="btn-outline btn-icon-only" id="undoBtn" onclick="undo()" title="Undo (Ctrl+Z)" disabled>
+                <i data-feather="corner-up-left" style="width: 18px; height: 18px;"></i>
+            </button>
+            <button class="btn-outline btn-icon-only" id="redoBtn" onclick="redo()" title="Redo (Ctrl+Y)" disabled>
+                <i data-feather="corner-up-right" style="width: 18px; height: 18px;"></i>
+            </button>
+            <div class="divider"></div>
+            <button class="btn-outline btn-icon-only" id="importBtn" title="Import JSON Data">
+                <i data-feather="upload" style="width: 18px; height: 18px;"></i>
+            </button>
+            <button class="btn-outline btn-icon-only" id="exportBtn" title="Export as JSON">
+                <i data-feather="download" style="width: 18px; height: 18px;"></i>
+            </button>
+            <button class="btn-outline" id="shareBtn" title="Get Shareable Link">
+                <i data-feather="link" style="width: 18px; height: 18px;"></i> Share
+            </button>
+            <div class="divider"></div>
+            <button class="btn-outline btn-icon-only" id="clearBtn" title="Clear All Data">
+                <i data-feather="trash-2" style="width: 18px; height: 18px;"></i>
+            </button>
+            <button class="btn-outline btn-icon-only" id="printBtn" title="Print PDF">
+                <i data-feather="printer" style="width: 18px; height: 18px;"></i>
+            </button>
+            <button class="btn-primary" id="saveBtn">
+                <i data-feather="save" style="width: 18px; height: 18px;"></i> Save
+            </button>
+        </div>
+    </div>
+
+    <div class="toolbar-container">
+        <button class="btn-secondary" id="addTaskRowBtn"><i data-feather="plus" style="width: 16px; height: 16px;"></i> Add Time Slot</button>
+        <button class="btn-secondary" id="addBreakRowBtn"><i data-feather="coffee" style="width: 16px; height: 16px;"></i> Add Break</button>
+    </div>
+
+    <div class="table-container">
+        <div class="table-scroll">
+            <table id="routineTable">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th data-day="1" class="day-header">Monday <button class="col-copy-btn" onclick="openCopyDayModal(1, 'Monday')" title="Copy schedule"><i data-feather="copy"></i></button></th>
+                        <th data-day="2" class="day-header">Tuesday <button class="col-copy-btn" onclick="openCopyDayModal(2, 'Tuesday')" title="Copy schedule"><i data-feather="copy"></i></button></th>
+                        <th data-day="3" class="day-header">Wednesday <button class="col-copy-btn" onclick="openCopyDayModal(3, 'Wednesday')" title="Copy schedule"><i data-feather="copy"></i></button></th>
+                        <th data-day="4" class="day-header">Thursday <button class="col-copy-btn" onclick="openCopyDayModal(4, 'Thursday')" title="Copy schedule"><i data-feather="copy"></i></button></th>
+                        <th data-day="5" class="day-header">Friday <button class="col-copy-btn" onclick="openCopyDayModal(5, 'Friday')" title="Copy schedule"><i data-feather="copy"></i></button></th>
+                        <th data-day="6" class="day-header">Saturday <button class="col-copy-btn" onclick="openCopyDayModal(6, 'Saturday')" title="Copy schedule"><i data-feather="copy"></i></button></th>
+                        <th data-day="0" class="day-header">Sunday <button class="col-copy-btn" onclick="openCopyDayModal(0, 'Sunday')" title="Copy schedule"><i data-feather="copy"></i></button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Content injected via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <input type="file" id="fileInput" accept=".json" style="display: none;">
+
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <div class="modal-icon"><i data-feather="alert-triangle" style="width: 48px; height: 48px;"></i></div>
+            <div class="modal-title">Please Confirm</div>
+            <div class="modal-message" id="confirmMessage">Are you sure you want to proceed?</div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="confirmCancelBtn">Cancel</button>
+                <button class="modal-btn confirm" id="confirmOkBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="copyDayModal">
+        <div class="modal-box">
+            <div class="modal-icon"><i data-feather="copy" style="width: 48px; height: 48px; color: var(--primary);"></i></div>
+            <div class="modal-title">Copy Schedule</div>
+            <div class="modal-message">Where would you like to copy <strong id="copySourceDayName">Monday</strong>'s schedule?</div>
+            
+            <div style="margin-bottom: 24px; text-align: left;">
+                <select id="copyTargetDaySelect" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-family: 'Inter', sans-serif; font-size: 0.95rem; background: #f9fafb; outline: none; cursor: pointer;">
+                    <option value="all">Every Day (All week)</option>
+                    <option value="1">Monday</option>
+                    <option value="2">Tuesday</option>
+                    <option value="3">Wednesday</option>
+                    <option value="4">Thursday</option>
+                    <option value="5">Friday</option>
+                    <option value="6">Saturday</option>
+                    <option value="0">Sunday</option>
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn cancel" id="copyDayCancelBtn">Cancel</button>
+                <button class="modal-btn confirm" id="copyDayOkBtn">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+        const STORAGE_KEY = 'timetableRoutineData';
+
+        const defaultData = [
+            { type: 'task', time: '06:00 AM - 08:00 AM', days: ['','','','','','',''] },
+            { type: 'task', time: '08:00 AM - 10:00 AM', days: ['','','','','','',''] },
+            { type: 'task', time: '10:00 AM - 12:00 PM', days: ['','','','','','',''] },
+            { type: 'break', time: '12:00 PM - 01:00 PM', content: '🍱 Lunch / Break ☕' },
+            { type: 'task', time: '01:00 PM - 03:00 PM', days: ['','','','','','',''] },
+            { type: 'task', time: '03:00 PM - 06:00 PM', days: ['','','','','','',''] },
+            { type: 'task', time: '06:00 PM - 09:00 PM', days: ['','','','','','',''] },
+            { type: 'task', time: '09:00 PM - 10:30 PM', days: ['','','','','','',''] }
+        ];
+
+        // Core Functions
+        function getTableData() {
+            const rows = document.querySelectorAll('#routineTable tbody tr');
+            const data = [];
+            rows.forEach(row => {
+                const type = row.classList.contains('break-row') ? 'break' : 'task';
+                const timeEl = row.querySelector('.time-text');
+                const timeText = timeEl ? timeEl.innerText.trim() : '';
+                
+                if (type === 'break') {
+                    const contentCell = row.querySelector('td.task-cell');
+                    data.push({ type: 'break', time: timeText, content: contentCell ? contentCell.innerText.trim() : '' });
+                } else {
+                    const dayCells = row.querySelectorAll('td.task-cell');
+                    const days = Array.from(dayCells).map(cell => cell.innerText.trim());
+                    data.push({ type: 'task', time: timeText, days });
+                }
+            });
+            return data;
+        }
+
+        function renderTable(data) {
+            const tbody = document.querySelector('#routineTable tbody');
+            tbody.innerHTML = '';
+            data.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');
+                if (row.type === 'break') {
+                    tr.className = 'break-row';
+                    tr.innerHTML = `
+                        <td class="time-col" style="position: relative;">
+                            <div contenteditable="true" class="time-text">${row.time}</div>
+                            <div class="row-actions" contenteditable="false">
+                                <button class="action-btn" onclick="insertRow(this, 'task')" title="Insert Task Below"><i data-feather="plus"></i></button>
+                                <button class="action-btn" onclick="insertRow(this, 'break')" title="Insert Break Below"><i data-feather="coffee"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteRow(this)" title="Delete Row"><i data-feather="trash-2"></i></button>
+                            </div>
+                        </td>
+                        <td colspan="7" contenteditable="true" class="task-cell">${row.content || ''}</td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td class="time-col" style="position: relative;">
+                            <div contenteditable="true" class="time-text">${row.time}</div>
+                            <div class="row-actions" contenteditable="false">
+                                <button class="action-btn" onclick="copyRowAcross(this)" title="Copy first task to all days"><i data-feather="copy"></i></button>
+                                <button class="action-btn" onclick="insertRow(this, 'task')" title="Insert Task Below"><i data-feather="plus"></i></button>
+                                <button class="action-btn" onclick="insertRow(this, 'break')" title="Insert Break Below"><i data-feather="coffee"></i></button>
+                                <button class="action-btn delete-btn" onclick="deleteRow(this)" title="Delete Row"><i data-feather="trash-2"></i></button>
+                            </div>
+                        </td>
+                        <td contenteditable="true" class="task-cell" data-col="1">${row.days[0] || ''}</td>
+                        <td contenteditable="true" class="task-cell" data-col="2">${row.days[1] || ''}</td>
+                        <td contenteditable="true" class="task-cell" data-col="3">${row.days[2] || ''}</td>
+                        <td contenteditable="true" class="task-cell" data-col="4">${row.days[3] || ''}</td>
+                        <td contenteditable="true" class="task-cell" data-col="5">${row.days[4] || ''}</td>
+                        <td contenteditable="true" class="task-cell" data-col="6">${row.days[5] || ''}</td>
+                        <td contenteditable="true" class="task-cell" data-col="0">${row.days[6] || ''}</td>
+                    `;
+                }
+                tbody.appendChild(tr);
+            });
+            feather.replace();
+            highlightToday();
+            updateColumnCopyButtons();
+        }
+
+        function highlightToday() {
+            document.querySelectorAll('.today').forEach(el => el.classList.remove('today'));
+            const today = new Date().getDay();
+            document.querySelectorAll(`th[data-day="${today}"]`).forEach(th => th.classList.add('today'));
+            document.querySelectorAll(`td[data-col="${today}"]`).forEach(td => td.classList.add('today'));
+        }
+
+        function updateColumnCopyButtons() {
+            const tbody = document.querySelector('#routineTable tbody');
+            for (let day = 0; day <= 6; day++) {
+                const cells = tbody.querySelectorAll(`td[data-col="${day}"]`);
+                let allFilled = cells.length > 0;
+                
+                cells.forEach(cell => {
+                    const content = cell.innerHTML.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, '').trim();
+                    if (content === '') {
+                        allFilled = false;
+                    }
+                });
+                
+                const header = document.querySelector(`th[data-day="${day}"]`);
+                if (header) {
+                    const btn = header.querySelector('.col-copy-btn');
+                    if (btn) {
+                        btn.style.display = allFilled ? 'flex' : 'none';
+                    }
+                }
+            }
+        }
+
+        let historyStack = [];
+        let historyIndex = -1;
+
+        function updateUndoRedoButtons() {
+            const undoBtn = document.getElementById('undoBtn');
+            const redoBtn = document.getElementById('redoBtn');
+            if (undoBtn) undoBtn.disabled = historyIndex <= 0;
+            if (redoBtn) redoBtn.disabled = historyIndex >= historyStack.length - 1;
+            feather.replace(); // re-init icons if needed
+        }
+
+        function saveData(silent = false, skipHistory = false) {
+            const data = getTableData();
+            const jsonStr = JSON.stringify(data);
+            localStorage.setItem(STORAGE_KEY, jsonStr);
+            if(!silent) showToast('✓ Schedule saved successfully', 'success');
+
+            if (!skipHistory) {
+                if (historyIndex < historyStack.length - 1) {
+                    historyStack = historyStack.slice(0, historyIndex + 1);
+                }
+                if (historyIndex === -1 || historyStack[historyIndex] !== jsonStr) {
+                    historyStack.push(jsonStr);
+                    historyIndex++;
+                    if (historyStack.length > 50) {
+                        historyStack.shift();
+                        historyIndex--;
+                    }
+                }
+                updateUndoRedoButtons();
+            }
+        }
+
+        window.undo = function() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                const data = JSON.parse(historyStack[historyIndex]);
+                renderTable(data);
+                localStorage.setItem(STORAGE_KEY, historyStack[historyIndex]);
+                updateUndoRedoButtons();
+                showToast('↶ Undo successful', 'info');
+            }
+        };
+
+        window.redo = function() {
+            if (historyIndex < historyStack.length - 1) {
+                historyIndex++;
+                const data = JSON.parse(historyStack[historyIndex]);
+                renderTable(data);
+                localStorage.setItem(STORAGE_KEY, historyStack[historyIndex]);
+                updateUndoRedoButtons();
+                showToast('↷ Redo successful', 'info');
+            }
+        };
+
+        // Custom UI Modal Logic
+        let confirmCallback = null;
+        function showConfirmModal(message, callback) {
+            document.getElementById('confirmMessage').textContent = message;
+            confirmCallback = callback;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function hideConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            confirmCallback = null;
+        }
+
+        document.getElementById('confirmCancelBtn').addEventListener('click', hideConfirmModal);
+        document.getElementById('confirmOkBtn').addEventListener('click', () => {
+            if (confirmCallback) confirmCallback();
+            hideConfirmModal();
+        });
+
+        window.deleteRow = function(btn) {
+            showConfirmModal('Are you sure you want to delete this row?', () => {
+                btn.closest('tr').remove();
+                saveData(true);
+            });
+        };
+
+        window.insertRow = function(btn, type) {
+            const tr = btn.closest('tr');
+            const tbody = tr.parentElement;
+            const rows = Array.from(tbody.children);
+            const index = rows.indexOf(tr);
+            
+            const data = getTableData();
+            const newRow = type === 'break' 
+                ? { type: 'break', time: 'New Break', content: 'Break Time' }
+                : { type: 'task', time: 'New Time', days: ['','','','','','',''] };
+                
+            data.splice(index + 1, 0, newRow);
+            renderTable(data);
+            saveData(true);
+        };
+
+        let activeCopySourceIndex = -1;
+
+        window.openCopyDayModal = function(sourceColIndex, dayName) {
+            activeCopySourceIndex = sourceColIndex;
+            document.getElementById('copySourceDayName').textContent = dayName;
+            
+            const select = document.getElementById('copyTargetDaySelect');
+            Array.from(select.options).forEach(opt => {
+                if (opt.value === 'all') {
+                    opt.disabled = false; opt.hidden = false;
+                } else if (parseInt(opt.value) === sourceColIndex) {
+                    opt.disabled = true; opt.hidden = true;
+                } else {
+                    opt.disabled = false; opt.hidden = false;
+                }
+            });
+            select.value = 'all';
+            
+            document.getElementById('copyDayModal').classList.add('active');
+        };
+
+        function hideCopyDayModal() {
+            document.getElementById('copyDayModal').classList.remove('active');
+            activeCopySourceIndex = -1;
+        }
+
+        document.getElementById('copyDayCancelBtn').addEventListener('click', hideCopyDayModal);
+        
+        document.getElementById('copyDayOkBtn').addEventListener('click', () => {
+            if (activeCopySourceIndex === -1) return;
+            const targetVal = document.getElementById('copyTargetDaySelect').value;
+            
+            const data = getTableData();
+            let sourceIdx = activeCopySourceIndex === 0 ? 6 : activeCopySourceIndex - 1;
+            
+            data.forEach(row => {
+                if (row.type === 'task') {
+                    const sourceContent = row.days[sourceIdx];
+                    if (targetVal === 'all') {
+                        for(let i = 0; i < 7; i++) {
+                            row.days[i] = sourceContent;
+                        }
+                    } else {
+                        let targetIdx = parseInt(targetVal) === 0 ? 6 : parseInt(targetVal) - 1;
+                        row.days[targetIdx] = sourceContent;
+                    }
+                }
+            });
+            renderTable(data);
+            saveData(true);
+            showToast(targetVal === 'all' ? 'Copied to all days!' : 'Day copied successfully!', 'success');
+            hideCopyDayModal();
+        });
+
+        window.copyRowAcross = function(btn) {
+            const tr = btn.closest('tr');
+            const taskCells = tr.querySelectorAll('td.task-cell');
+            if(taskCells.length === 0) return;
+            
+            let sourceContent = taskCells[0].innerHTML;
+            for(let i=0; i<taskCells.length; i++) {
+                if(taskCells[i].innerHTML.trim() !== '' && taskCells[i].innerHTML.indexOf('Click to add...') === -1) {
+                    sourceContent = taskCells[i].innerHTML;
+                    break;
+                }
+            }
+            
+            taskCells.forEach(cell => cell.innerHTML = sourceContent);
+            saveData(true);
+            showToast('Task copied across all days!', 'success');
+        };
+
+        // Toast
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = message;
+            container.appendChild(toast);
+            void toast.offsetWidth;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
+        }
+
+        // Init App
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedData = urlParams.get('data');
+
+            if (sharedData) {
+                try {
+                    // Decode base64 URL safe
+                    const jsonStr = decodeURIComponent(escape(atob(sharedData)));
+                    const data = JSON.parse(jsonStr);
+                    renderTable(data);
+                    saveData(true); // Persist shared data locally
+                    showToast('🔗 Shared schedule loaded!', 'success');
+                    // Clean URL
+                    const newUrl = new URL(window.location.href);
+                    newUrl.searchParams.delete('data');
+                    window.history.replaceState({}, '', newUrl);
+                } catch (e) {
+                    showToast('Invalid link. Loading local data.', 'error');
+                    loadLocalData();
+                }
+            } else {
+                loadLocalData();
+            }
+
+            function loadLocalData() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                let initialData = defaultData;
+                if (saved) {
+                    try { initialData = JSON.parse(saved); } catch (e) {}
+                }
+                renderTable(initialData);
+                historyStack = [JSON.stringify(initialData)];
+                historyIndex = 0;
+                updateUndoRedoButtons();
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey || e.metaKey) {
+                    const key = e.key.toLowerCase();
+                    if (key === 'z') {
+                        e.preventDefault();
+                        if (e.shiftKey) window.redo();
+                        else window.undo();
+                    } else if (key === 'y') {
+                        e.preventDefault();
+                        window.redo();
+                    }
+                }
+            });
+
+            // Event Delegation for Content Editable
+            let timeout;
+            const tbody = document.querySelector('#routineTable tbody');
+            
+            tbody.addEventListener('input', (e) => {
+                if (e.target.hasAttribute('contenteditable')) {
+                    if (e.target.innerHTML === '<br>' || e.target.innerHTML === '<div><br></div>') {
+                        e.target.innerHTML = '';
+                    }
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => saveData(true), 1500);
+                    updateColumnCopyButtons();
+                }
+            });
+
+            tbody.addEventListener('keydown', (e) => {
+                if (e.target.hasAttribute('contenteditable') && e.key === 'Enter') {
+                    e.preventDefault();
+                    document.execCommand('insertLineBreak');
+                }
+            });
+
+            // Button Listeners
+            document.getElementById('saveBtn').addEventListener('click', () => saveData(false));
+            
+            document.getElementById('clearBtn').addEventListener('click', () => {
+                showConfirmModal('Clear all tasks? This cannot be undone.', () => {
+                    renderTable(defaultData.map(row => ({
+                        ...row, 
+                        days: row.days ? ['','','','','','',''] : undefined,
+                        content: row.type === 'break' ? '🍱 Lunch / Break ☕' : undefined
+                    })));
+                    localStorage.removeItem(STORAGE_KEY);
+                    showToast('🗑️ All tasks cleared', 'success');
+                });
+            });
+
+            document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+            document.getElementById('addTaskRowBtn').addEventListener('click', () => {
+                const data = getTableData();
+                data.push({ type: 'task', time: 'New Time', days: ['','','','','','',''] });
+                renderTable(data);
+                saveData(true);
+            });
+
+            document.getElementById('addBreakRowBtn').addEventListener('click', () => {
+                const data = getTableData();
+                data.push({ type: 'break', time: 'New Break', content: 'Break Time' });
+                renderTable(data);
+                saveData(true);
+            });
+
+            // Export Data
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const data = getTableData();
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `timetable_export_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('Data exported successfully', 'success');
+            });
+
+            // Import Data
+            document.getElementById('importBtn').addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
+            document.getElementById('fileInput').addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            if (Array.isArray(data)) {
+                                renderTable(data);
+                                saveData(true);
+                                showToast('Data imported successfully', 'success');
+                            } else {
+                                throw new Error('Invalid format');
+                            }
+                        } catch(err) {
+                            showToast('Failed to import: Invalid file format', 'error');
+                        }
+                    };
+                    reader.readAsText(e.target.files[0]);
+                }
+                // Reset input so the same file can be selected again
+                e.target.value = '';
+            });
+
+            // Share Link
+            document.getElementById('shareBtn').addEventListener('click', () => {
+                const data = getTableData();
+                const jsonStr = JSON.stringify(data);
+                try {
+                    const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('data', base64);
+                    
+                    navigator.clipboard.writeText(url.toString()).then(() => {
+                        showToast('🔗 Shareable link copied to clipboard!', 'success');
+                    }).catch(() => {
+                        showToast('Failed to copy link automatically', 'error');
+                    });
+                } catch (e) {
+                    showToast('Failed to generate link', 'error');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
